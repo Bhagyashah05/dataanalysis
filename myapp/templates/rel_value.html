@@ -1,0 +1,127 @@
+<!-- form.html -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Active Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(0, 0, 0);
+            font-size: 30px;
+        }
+
+        #rel {
+            width: 100%;
+            text-align: center;
+            font-weight: bolder;
+            border-radius: 20px;
+            padding: 20px;
+            background-color: aquamarine;
+            font-size: 20px;
+
+
+        }
+
+
+        h2 {
+            color: rgb(0, 4, 255);
+        }
+
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: antiquewhite;
+            font-weight: bolder;
+        }
+
+        .btn:hover {
+            background-color: aquamarine;
+        }
+
+        nav {
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+
+        nav a {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: aquamarine;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        nav a:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="{% url 'activeuser' %}">Active Users</a>
+        <a href="{% url 'login_activity' %}">Login Activity of User</a>
+        <a href="{% url 'session_time' %}">Session Time of User</a>
+
+    </nav>
+    <br>
+    {% if rel_value %}
+    <!-- <h1>Active Users</h1> -->
+    <form method="post" action="{% url 'rel_value' %}">
+        {% csrf_token %}
+        <select name="rel" id="rel">
+            <option value="" disabled selected>Select Client</option>
+            <option value="Reliable Kota">Reliable Kota</option>
+            <option value="Keystone Universe of Education">Keystone Universe of Education</option>
+            <option value="Shanti Asiatic School">Shanti Asiatic School</option>
+            <option value="Vyas Edification">Vyas Edification</option>
+            <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
+
+            <!-- Add more options if needed -->
+        </select>
+        <br><br>
+        <div>
+            <input type="submit" value="Submit" class="btn">
+        </div>
+    </form>
+    <h2>Active users of {{rel_value}}: {{ rel_val }}</h2>
+
+    {% else %}
+    <!-- <h1>Select Client</h1> -->
+    <form method="post" action="{% url 'rel_value' %}">
+        {% csrf_token %}
+        <select name="rel" id="rel">
+            <option value="" disabled selected>Select Client</option>
+            <option value="Reliable Kota">Reliable Kota</option>
+            <option value="Keystone Universe of Education">Keystone Universe of Education</option>
+            <option value="Shanti Asiatic School">Shanti Asiatic School</option>
+            <option value="Vyas Edification">Vyas Edification</option>
+            <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
+
+            <!-- Add more options if needed -->
+        </select>
+        <br><br>
+        <div>
+            <input type="submit" value="Submit" class="btn">
+        </div>
+    </form>
+    {% endif %}
+</body>
+
+</html>

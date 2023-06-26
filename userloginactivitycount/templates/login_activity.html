@@ -1,0 +1,132 @@
+<!-- app/templates/login_activity.html -->
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="email"],
+    select,
+    input[type="date"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    input[type="submit"] {
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    img {
+      display: block;
+      margin-top: 20px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    nav {
+      background-color: #f0f0f0;
+      padding: 10px;
+    }
+
+    nav a {
+      padding: 10px 20px;
+      margin: 0 5px;
+      background-color: aquamarine;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    nav a:hover {
+      background-color: #ccc;
+    }
+  </style>
+
+</head>
+
+<body>
+  <nav>
+    <a href="{% url 'activeuser' %}">Active Users</a>
+    <a href="{% url 'login_activity' %}">Login Activity of User</a>
+    <a href="{% url 'session_time' %}">Session Time of User</a>
+
+  </nav>
+  <br>
+  {% if email %}
+  <form method="POST">
+    {% csrf_token %}
+    <label for="email">Email:</label>
+    <input type="email" name="email" required><br><br>
+    <label for="api_name">API Name:</label>
+    <select name="api_name" required>
+      <option value="users /signin">Sign In</option>
+      <option value="users/signup">Sign Up</option>
+      <!-- Add more options as needed -->
+    </select><br><br>
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" required><br><br>
+    <input type="submit" value="Generate Graph">
+
+    <h1>Login Activity</h1>
+    <p>Email: {{ email }}</p>
+    <p>API Name: {{ api_name }}</p>
+    <p>Start Date: {{ start_date }}</p>
+    <img src="data:image/png;base64,{{ graph_image }}" alt="Login Activity Graph">
+  </form>
+  {% else %}
+  <form method="POST">
+    {% csrf_token %}
+    <label for="email">Email:</label>
+    <input type="email" name="email" required><br><br>
+    <label for="api_name">API Name:</label>
+    <select name="api_name" required>
+      <option value="users /signin">Sign In</option>
+      <option value="users/signup">Sign Up</option>
+      <!-- Add more options as needed -->
+    </select><br><br>
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" required><br><br>
+    <input type="submit" value="Get login Activity">
+
+
+  </form>
+  {%endif%}
+
+</body>
+
+</html>
