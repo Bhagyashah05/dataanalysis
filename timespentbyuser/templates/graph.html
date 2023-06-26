@@ -100,8 +100,10 @@
         <a href="{% url 'activeuser' %}">Active Users</a>
         <a href="{% url 'login_activity' %}">Login Activity of User</a>
         <a href="{% url 'session_time' %}">Session Time of User</a>
+        <a href="{% url 'client_usage_graph' %}">Login Activity of Client</a>
 
     </nav>
+    <br>
     <br>
     <form method="POST" onsubmit="return validateForm()" name="timespentForm">
         {% csrf_token %}

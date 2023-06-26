@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'userloginactivitycount',
     'timespentbyuser',
     "rest_framework",
+    "client_logins",
 ]
 
 MIDDLEWARE = [

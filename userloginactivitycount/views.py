@@ -23,7 +23,7 @@ def get_user_login_times(email, api_name, start_date=None):
 
     # Fetch the documents matching the query
     documents = collection.find(query)
-
+    
     # Initialize variables for login counts and the start date
     login_count = {}
     latest_login_time = None

@@ -1,0 +1,158 @@
+<!-- usage_graph.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Usage Graph</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        /* #graph {
+            width: 600px;
+            height: 400px;
+        } */
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333333;
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        #client_name,
+        input[type="date"],
+        input[type="submit"] {
+            width: 90%;
+            padding: 10px 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        nav {
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+
+        nav a {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: aquamarine;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        nav a:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="{% url 'activeuser' %}">Active Users</a>
+        <a href="{% url 'login_activity' %}">Login Activity of User</a>
+        <a href="{% url 'session_time' %}">Session Time of User</a>
+        <a href="{% url 'client_usage_graph' %}">Login Activity of Client</a>
+
+
+    </nav>
+    <br>
+    <br>
+    <form method="POST" action="{% url 'client_usage_graph' %}">
+        {% csrf_token %}
+        <label for="client_name">Client Name:</label>
+        <select name="client_name" id="client_name">
+            <option value="" disabled selected>Select Client</option>
+            <option value="Reliable Kota">Reliable Kota</option>
+            <option value="Keystone Universe of Education">Keystone Universe of Education</option>
+            <option value="Shanti Asiatic School">Shanti Asiatic School</option>
+            <option value="Vyas Edification">Vyas Edification</option>
+            <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
+
+        </select>
+        <!-- <input type="text" name="client_name" required> -->
+        <br>
+        <br>
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" required>
+        <br>
+        <br>
+        <input type="submit" value="Generate Graph">
+        <h2>Usage Graph</h2>
+
+    <div id="graph"></div>
+    </form>
+    <h2>Usage Graph</h2>
+
+    <div id="graph"></div>
+
+    <script>
+        var graphData = JSON.parse('{{ graph_data_json|escapejs }}');
+
+        var xData = graphData.map(function (item) {
+            return item.date;
+        });
+
+        var yData = graphData.map(function (item) {
+            return item.count;
+        });
+
+        var data = [{
+            x: xData,
+            y: yData,
+            type: 'bar'
+        }];
+
+        var layout = {
+            title: 'Seven Days Usage Graph',
+            xaxis: {
+                title: 'Date'
+            },
+            yaxis: {
+                title: 'Login Count'
+            }
+        };
+
+        Plotly.newPlot('graph', data, layout);
+    </script>
+</body>
+
+</html>

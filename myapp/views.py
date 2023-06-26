@@ -32,10 +32,10 @@ import os
 # filtered_df = df[df["goal"].apply(lambda x: any(date >= pd.to_datetime("2022-12-31") for date in x))]
 # user_id=filtered_df['user_id']
 # values=list(user_id)
-values=pd.read_csv(r"D:\user django\values")
+values=pd.read_csv(r"D:\user django\users\values")
 values=list(values["0"])
 values
-csv_file_path = r"D:\user django\finalusers"
+csv_file_path = r"D:\user django\users\finalusers"
 users1=pd.read_csv(csv_file_path,low_memory=False)
 str_values = [str(value) for value in values]
 

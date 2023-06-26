@@ -21,6 +21,7 @@ from myapp.views import rel_form
 from userloginactivitycount.views import login_activity
 from myapp.views import mainpage
 from timespentbyuser.views import session_activity
+from client_logins.views import usage_graph
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +29,8 @@ urlpatterns = [
     path('rel_value', rel_form, name='rel_value'),
     path('login-activity/', login_activity, name='login_activity'),
     path('', mainpage, name='mainpage'),
-     path('sessiontime/',session_activity, name='session_time'),
+    path('sessiontime/',session_activity, name='session_time'),
+    path('client_logins/', usage_graph, name='client_usage_graph'),
 
 ]
 
