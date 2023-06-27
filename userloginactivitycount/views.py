@@ -8,62 +8,112 @@ from io import BytesIO
 import base64
 import matplotlib
 matplotlib.use('Agg')
+from datetime import timedelta
 
 
-def get_user_login_times(email, api_name, start_date=None):
+# def get_user_login_times(email, api_name, start_date=None):
     # Connect to the MongoDB server and access the collection
-    client = MongoClient("mongodb://65.2.116.84:27017/")
-    db = client["production"]
-    collection = db["logs"]
+    # client = MongoClient("mongodb://65.2.116.84:27017/")
+    # db = client["production"]
+    # collection = db["logs"]
 
-    # Define the query based on the email, API name, and start date
-    query = {"params.email": email, "api": api_name}
-    if start_date:
-        query["createdAt"] = {"$gte": start_date}
+    # # Define the query based on the email, API name, and start date
+    # query = {"params.email": email, "api": api_name}
+    # if start_date:
+    #     query["createdAt"] = {"$gte": start_date}
 
-    # Fetch the documents matching the query
-    documents = collection.find(query)
+    # # Fetch the documents matching the query
+    # documents = collection.find(query)
     
-    # Initialize variables for login counts and the start date
-    login_count = {}
-    latest_login_time = None
+    # # Initialize variables for login counts and the start date
+    # login_count = {}
+    # latest_login_time = None
 
-    # Iterate through each document
-    for document in documents:
-        # Retrieve the createdAt time from the document
-        created_at = document["createdAt"]
-        ist = pytz.timezone('Asia/Kolkata')
-        created_at = created_at.astimezone(ist)
+    # # Iterate through each document
+    # for document in documents:
+    #     # Retrieve the createdAt time from the document
+    #     created_at = document["createdAt"]
+    #     ist = pytz.timezone('Asia/Kolkata')
+    #     created_at = created_at.astimezone(ist)
 
-        date = created_at.date()
-        if date in login_count:
-            login_count[date] += 1
-        else:
-            login_count[date] = 1
+    #     date = created_at.date()
+    #     if date in login_count:
+    #         login_count[date] += 1
+    #     else:
+    #         login_count[date] = 1
 
-    if start_date and start_date.date() not in login_count:
-        next_date = start_date.date()
-        while next_date not in login_count:
-            next_date += datetime.timedelta(days=1)
-        start_date = next_date
+    # if start_date and start_date.date() not in login_count:
+    #     next_date = start_date.date()
+    #     while next_date not in login_count:
+    #         next_date += datetime.timedelta(days=1)
+    #     start_date = next_date
 
-    return login_count, start_date
+    # return login_count, start_date
+
+
+
+    # from pymongo import MongoClient
+    # from datetime import datetime, timedelta
+
+def get_user_login_times(email, api, start_date, end_date):
+        client = MongoClient('mongodb://65.2.116.84:27017/')
+
+        db = client.production
+        collection = db.logs
+
+        login_counts = {}
+
+        current_date = start_date
+        while current_date < end_date:
+            query = {
+                'params.email': email,
+                'api': api,
+                'createdAt': {'$gte': current_date, '$lt': current_date + timedelta(days=1)}
+            }
+
+            total_logins = collection.count_documents(query)
+
+            login_counts[current_date.date()] = total_logins
+
+            current_date += timedelta(days=1)
+
+        client.close()
+
+        return login_counts , start_date
+
+    # api_name = "users /signin"
+    # start_date = "2023-06-14"
+    # email = "ruchik4822@keystone.com"
+
+    
+
+    
+    
+# for users login
 
 def login_activity(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         api_name = request.POST.get('api_name')
-        start_date_str = request.POST.get('start_date')
+        start_date = request.POST.get('start_date')
 
-        if start_date_str:
-            start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').astimezone(pytz.utc)
-        else:
-            start_date = None
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = start_date + datetime.timedelta(days=7)
+        login_counts = get_user_login_times(email, api_name, start_date, end_date)
+    # for date, count in login_counts.items():
+    #     print(f"Date: {date}, Login Count: {count}")
 
-        login_count, start_date = get_user_login_times(email, api_name, start_date)
 
-        dates = list(login_count.keys())
-        counts = list(login_count.values())
+        # if start_date:
+        #     start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').astimezone(pytz.utc)
+        # else:
+        #     start_date = None
+
+        # login_count, start_date = get_user_login_times(email, api_name, start_date)
+        print(login_counts)
+        login_counts,_=login_counts
+        dates = list(login_counts.keys())
+        counts = list(login_counts.values())
 
         # Convert dates to datetime objects with fixed time (midnight)
         dates = [datetime.datetime.combine(date, datetime.time.min) for date in dates]
@@ -86,7 +136,7 @@ def login_activity(request):
         context = {
             'email': email,
             'api_name': api_name,
-            'start_date': start_date_str,
+            'start_date': start_date,
             'graph_image': graph_image,
         }
 
