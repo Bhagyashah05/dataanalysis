@@ -1,8 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
-
-from django.shortcuts import render
 import matplotlib.pyplot as plt
 from pymongo import MongoClient
 from datetime import datetime, timedelta

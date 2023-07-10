@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333333;
+            text-align: center;
+        }
+
+      
+
+        nav {
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+
+        nav a {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: aquamarine;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        nav a:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'activeuser' %}">Active Users</a>
+        <a href="{% url 'login_activity' %}">Login Activity of User</a>
+        <a href="{% url 'session_time' %}">Session Time of User</a>
+        <a href="{% url 'client_usage_graph' %}">Login Activity of Client</a>
+        <a href="{% url 'client_session' %}">Session Time of Client</a>
+        <a href="/" style="background-color: lightcoral;">Home</a>
+    </nav>
+    <br>
+    <br>
+    <span style="font-size: large; font-weight: bolder;">Change Client</span>
+    <br><br>
+    <form method="POST" action="/">
+        {% csrf_token %}
+        <label for="client_name">Client Name:</label>
+        <select name="client_name" id="client_name" style="font-size: 14px; padding: 5px;">
+            <option value="" disabled selected>Select Client</option>
+            <option value="Reliable Kota">Reliable Kota</option>
+            <option value="Keystone Universe of Education">Keystone Universe of Education</option>
+            <option value="Shanti Asiatic School">Shanti Asiatic School</option>
+            <option value="Vyas Edification">Vyas Edification</option>
+            <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
+            <option value="AA">AA</option>
+
+        </select>
+        <br>
+        <br>
+        <label for="date">Start Date:</label>
+        <input type="date" name="date" required style="font-size: 14px; padding: 5px;">
+        <br>
+        <br>
+        <input type="submit" value="Submit" style="font-size: 14px; padding: 5px;">
+    </form>
+</body>
+</html>

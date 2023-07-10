@@ -33,9 +33,10 @@ def get_total_logins(emails, api, start_date, end_date):
     return login_counts
 
 def usage_graph(request):
-    if request.method == 'POST':
-        client_name = request.POST['client_name']
-        csv_file_path = r"D:\user django\users\finalusers"
+    # if request.method == 'POST':
+        # client_name = request.POST['client_name']
+        client_name= request.session['client']
+        csv_file_path = r"D:\data analysis\dataanalysis\finalusers"
         df=pd.read_csv(csv_file_path,low_memory=False)
         filtered_df = df[df['client'] == client_name]
         user_ids = filtered_df['user_id'].tolist()
@@ -54,7 +55,9 @@ def usage_graph(request):
             return emails
 
         emails = get_emails_by_user_ids(user_ids)
-        start_date = datetime.strptime(request.POST['start_date'], "%Y-%m-%d")
+        # start_date = datetime.strptime(request.POST['start_date'], "%Y-%m-%d")
+        start_date = datetime.strptime(request.session['date'], "%Y-%m-%d")
+
         end_date = start_date + timedelta(days=7)
 
         # Retrieve the emails for the given client_name
@@ -81,9 +84,9 @@ def usage_graph(request):
     ]
 
         graph_data_json = json.dumps(graph_data_serializable)
-
+        print(graph_data_json)
         context = {'graph_data_json': graph_data_json}
         return render(request, 'client_usage_graph.html', context)
 
-    return render(request, 'client_usage_form.html')
+    # return render(request, 'client_usage_form.html')
 

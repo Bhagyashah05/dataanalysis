@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+</head>
+
+<body>
+    <!-- <span style="font-size: large; font-weight: bolder;">Change Client</span> -->
+    <br><br>
+    <form method="POST" action="/">
+        {% csrf_token %}
+        <label for="client_name">Client Name:</label>
+        <select name="client_name" id="client_name" style="font-size: 14px; padding: 5px;">
+            <option value="" disabled selected>Select Client</option>
+            <option value="Reliable Kota">Reliable Kota</option>
+            <option value="Keystone Universe of Education">Keystone Universe of Education</option>
+            <option value="Shanti Asiatic School">Shanti Asiatic School</option>
+            <option value="Vyas Edification">Vyas Edification</option>
+            <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
+            <option value="AA">AA</option>
+
+        </select>
+        <br>
+        <br>
+        <label for="date">Start Date:</label>
+        <input type="date" name="date" required style="font-size: 14px; padding: 5px;">
+        <br>
+        <br>
+        <input type="submit" value="Submit" style="font-size: 14px; padding: 5px;">
+        <!-- <h1>{{clients}}</h1> -->
+        <div id="chart-container" style="height: 800px;width: 800px;"></div>
+
+        <script>
+            var graphData = JSON.parse('{{ clients |escapejs }}');
+            console.log(graphData)
+            // function drawPieChart(graphData) {
+            //     var options = {
+            //         title: 'Client Users',
+
+            //         is3D: true,
+            //         animation: {
+            //             startup: true, 
+            //             duration: 1000, 
+            //             easing: 'out', 
+            //         },
+            //     };
+
+
+            //     google.charts.load('current', { 'packages': ['corechart'] });
+            //     google.charts.setOnLoadCallback(function () {
+            //         var dataTable = new google.visualization.DataTable();
+            //         dataTable.addColumn('string', 'client');
+            //         dataTable.addColumn('number', 'Users');
+
+            //         // Add data rows dynamically
+            //         for (var client in graphData) {
+            //             if (graphData.hasOwnProperty(client)) {
+            //                 dataTable.addRow([client, graphData[client]]);
+            //             }
+            //         }
+
+            //         var chart = new google.visualization.PieChart(document.getElementById('chart-container'));
+            //         chart.draw(dataTable, options);
+            //     });
+            // }
+
+            // drawPieChart(graphData);
+
+
+
+            // Create the chart configuration object
+            var chartConfig = {
+                chart: {
+                    renderTo: 'chart-container',
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Client and Active Users'
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.point.name + '</b>: ' + this.point.y + ' Users (' + this.percentage.toFixed(1) + '%)';
+                    }
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            pointFormat: '<b>{point.name}</b>: ({point.percentage:.1f}%)'
+                        },
+                        slicedOffset:40
+                    }
+                },
+                series: [{
+                    name: 'Users',
+                    data: Object.entries(graphData)
+                        .filter(([client, users]) => users > 100)
+                        .map(([client, users]) => ({ name: client, y: users })),
+                }]
+            };
+
+            // Render the chart
+            var chart = new Highcharts.Chart(chartConfig);
+
+        </script>
+    </form>
+</body>
+
+</html>

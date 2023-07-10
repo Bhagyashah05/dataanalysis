@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+</head>
+
+<body>
+    {% include "changeclient.html" %}
+    <h1>Time Usage of {{client}} (in hours) </h1>
+    <div id="graph"></div>
+
+
+    <!-- <form method="POST" action="{% url 'client_session' %}">
+        {% csrf_token %}
+        <label for="client_name">Client Name:</label>
+
+        <select name="client_name" id="client_name">
+            <option value="" disabled selected>Select Client</option>
+            <option value="Reliable Kota">Reliable Kota</option>
+            <option value="Keystone Universe of Education">Keystone Universe of Education</option>
+            <option value="Shanti Asiatic School">Shanti Asiatic School</option>
+            <option value="Vyas Edification">Vyas Edification</option>
+            <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
+
+        </select>
+        <br>
+        <br>
+        <label for="sdate">Start Date:</label>
+        <input type="date" name="sdate" required>
+        <br>
+        <br>
+        <input type="submit" value="Get Time">
+    </form> -->
+    <!-- <h1>Time spent on {{date}} by {{client}} : {{data}}</h1> -->
+    <script>
+        var graphData = JSON.parse('{{ data|escapejs }}');
+        console.log(Object.keys(graphData))
+        var xData=Object.keys(graphData)
+        var yData=Object.values(graphData)
+        var data = [{
+            x: xData,
+            y: yData,
+            type: 'bar'
+        }];
+
+        var layout = {
+            title: 'Seven Days Usage Graph',
+            xaxis: {
+                title: 'Date'
+            },
+            yaxis: {
+                title: 'Session Time'
+            }
+        };
+
+        Plotly.newPlot('graph', data, layout);
+    </script>
+
+</body>
+
+</html>

@@ -6,97 +6,21 @@
     <title>Usage Graph</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
 
         /* #graph {
             width: 600px;
             height: 400px;
         } */
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #333333;
-            text-align: center;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333333;
-        }
-
-        #client_name,
-        input[type="date"],
-        input[type="submit"] {
-            width: 90%;
-            padding: 10px 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        input[type="submit"] {
-            background-color: #4caf50;
-            color: #ffffff;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        nav {
-            background-color: #f0f0f0;
-            padding: 10px;
-        }
-
-        nav a {
-            padding: 10px 20px;
-            margin: 0 5px;
-            background-color: aquamarine;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 16px;
-            color: #333;
-        }
-
-        nav a:hover {
-            background-color: #ccc;
-        }
+    
     </style>
 </head>
 
 <body>
-    <nav>
-        <a href="{% url 'activeuser' %}">Active Users</a>
-        <a href="{% url 'login_activity' %}">Login Activity of User</a>
-        <a href="{% url 'session_time' %}">Session Time of User</a>
-        <a href="{% url 'client_usage_graph' %}">Login Activity of Client</a>
 
+    {% include "changeclient.html" %}
 
-    </nav>
-    <br>
-    <br>
-    <form method="POST" action="{% url 'client_usage_graph' %}">
+    <!-- <form method="POST" action="{% url 'client_usage_graph' %}">
         {% csrf_token %}
         <label for="client_name">Client Name:</label>
         <select name="client_name" id="client_name">
@@ -108,7 +32,6 @@
             <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
 
         </select>
-        <!-- <input type="text" name="client_name" required> -->
         <br>
         <br>
         <label for="start_date">Start Date:</label>
@@ -119,14 +42,14 @@
         <h2>Usage Graph</h2>
 
     <div id="graph"></div>
-    </form>
-    <h2>Usage Graph</h2>
+    </form> -->
+    <h1>Login Activity of {{ request.session.client}}</h1>
 
     <div id="graph"></div>
 
     <script>
         var graphData = JSON.parse('{{ graph_data_json|escapejs }}');
-
+        console.log(graphData)
         var xData = graphData.map(function (item) {
             return item.date;
         });
@@ -134,7 +57,8 @@
         var yData = graphData.map(function (item) {
             return item.count;
         });
-
+        console.log(xData)
+        console.log(yData)
         var data = [{
             x: xData,
             y: yData,
@@ -153,6 +77,7 @@
 
         Plotly.newPlot('graph', data, layout);
     </script>
+
 </body>
 
 </html>

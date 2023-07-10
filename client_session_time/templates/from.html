@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333333;
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        #client_name,
+        input[type="date"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        nav {
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+
+        nav a {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: aquamarine;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        nav a:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'activeuser' %}">Active Users</a>
+        <a href="{% url 'login_activity' %}">Login Activity of User</a>
+        <a href="{% url 'session_time' %}">Session Time of User</a>
+        <a href="{% url 'client_usage_graph' %}">Login Activity of Client</a>
+        <a href="{% url 'client_session' %}">Session Time of Client</a>
+
+
+    </nav>
+    <br><br>
+    <form method="POST" action="{% url 'client_session' %}">
+        {% csrf_token %}
+        <label for="client_name">Client Name:</label>
+        <!-- <input type="text" name="client_name" required>  -->
+
+        <select name="client_name" id="client_name">
+            <option value="" disabled selected>Select Client</option>
+            <option value="Reliable Kota">Reliable Kota</option>
+            <option value="Keystone Universe of Education">Keystone Universe of Education</option>
+            <option value="Shanti Asiatic School">Shanti Asiatic School</option>
+            <option value="Vyas Edification">Vyas Edification</option>
+            <option value="PCCP Reliable Kota">PCCP Reliable Kota</option>
+
+        </select>
+        <br>
+        <br>
+        <label for="sdate">Start Date:</label>
+        <input type="date" name="sdate" required>
+        <br>
+        <br>
+        <input type="submit" value="Get Time">
+    </form>
+</body>
+</html>

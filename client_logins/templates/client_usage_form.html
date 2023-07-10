@@ -77,22 +77,13 @@
 
 <body>
 
-    <nav>
-        <a href="{% url 'activeuser' %}">Active Users</a>
-        <a href="{% url 'login_activity' %}">Login Activity of User</a>
-        <a href="{% url 'session_time' %}">Session Time of User</a>
-        <a href="{% url 'client_usage_graph' %}">Login Activity of Client</a>
-
-
-    </nav>
-    <br>
-    <br>
+    
     <form method="POST" action="{% url 'client_usage_graph' %}">
         {% csrf_token %}
         <label for="client_name">Client Name:</label>
         <!-- <input type="text" name="client_name" required>  -->
 
-        <select name="client_name" id="client_name">
+        <!-- <select name="client_name" id="client_name">
             <option value="" disabled selected>Select Client</option>
             <option value="Reliable Kota">Reliable Kota</option>
             <option value="Keystone Universe of Education">Keystone Universe of Education</option>
@@ -106,8 +97,10 @@
         <label for="start_date">Start Date:</label>
         <input type="date" name="start_date" required>
         <br>
-        <br>
+        <br> -->
         <input type="submit" value="Generate Graph">
+
+        <h1>{{ request.session.client }}</h1>
     </form>
 
 </body>

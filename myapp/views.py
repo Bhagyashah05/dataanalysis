@@ -32,10 +32,10 @@ import os
 # filtered_df = df[df["goal"].apply(lambda x: any(date >= pd.to_datetime("2022-12-31") for date in x))]
 # user_id=filtered_df['user_id']
 # values=list(user_id)
-values=pd.read_csv(r"D:\user django\users\values")
+values=pd.read_csv(r"D:\data analysis\dataanalysis\values")
 values=list(values["0"])
-values
-csv_file_path = r"D:\user django\users\finalusers"
+
+csv_file_path = r"D:\data analysis\dataanalysis\finalusers"
 users1=pd.read_csv(csv_file_path,low_memory=False)
 str_values = [str(value) for value in values]
 
@@ -46,23 +46,24 @@ filtered_df3=""
 
 
 # users/views.py
-
-
 def rel_form(request):
-    if request.method == 'POST':
-        rel_value = request.POST.get('rel')
-        filtered_df3 = filtered_df1[(filtered_df1['client'] == rel_value) ]
-        rel=len(filtered_df3)
-        return render(request, 'rel_value.html', {'rel_val': rel,'rel_value':rel_value})
-    else:
-        return render(request, 'rel_value.html')
+        # if request.method == 'POST':
+            rel_value = request.session.get('client')
+            filtered_df3 = filtered_df1[(filtered_df1['client'] == rel_value) ]
+            rel=len(filtered_df3)
+            return render(request, 'rel_value.html', {'rel': rel,'rel_value':rel_value})
+        # else:
+        #     return render(request, 'rel_value.html')
 
-def rel_value(request):
-    # Your code here to calculate the 'rel' value or use the existing value
-    # rel = len(filtered_df3)  # Calculate or use the 'rel' value from your code
+# def rel_value(request):
+#         # Your code here to calculate the 'rel' value or use the existing value
+#         # rel = len(filtered_df3)  # Calculate or use the 'rel' value from your code
 
-    return render(request, 'rel_value.html', {'Active users': rel})
-    
+#         return render(request, 'rel_value.html', {'Active users': rel})
+        
 def mainpage(request):
-    return render(request,'mainpage.html')
+        return render(request,'mainpage.html')   
+
+
+
 

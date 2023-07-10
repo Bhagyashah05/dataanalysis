@@ -16,21 +16,32 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from myapp.views import rel_value
+# from myapp.views import rel_value
 from myapp.views import rel_form
 from userloginactivitycount.views import login_activity
 from myapp.views import mainpage
 from timespentbyuser.views import session_activity
 from client_logins.views import usage_graph
+from client_session_time.views import userids
+from clientselect.views import setvariables
+# from clientselect.views import dataanalysis
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('activeuser/', rel_form, name='activeuser'),
-    path('rel_value', rel_form, name='rel_value'),
+    # path('', rel_form, name='rel_value'),
     path('login-activity/', login_activity, name='login_activity'),
-    path('', mainpage, name='mainpage'),
+    path('', setvariables, name='setvariables'),
     path('sessiontime/',session_activity, name='session_time'),
     path('client_logins/', usage_graph, name='client_usage_graph'),
+    path('client_session/', userids, name='client_session'),
+    path('mainpage/', mainpage, name='mainpage'),
+
+    # path('data_analysis/', dataanalysis, name='dataanalysis'),
+
+
+
 
 ]
 
