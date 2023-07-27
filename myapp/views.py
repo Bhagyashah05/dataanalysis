@@ -139,7 +139,7 @@ def rel_form(request):
         }
 
         uservideostats_results = db["uservideostats"].find(uservideostats_query)
-
+                
         newusers={
                 "_id": {"$in": obj_user},
                 "createdAt":{
@@ -259,6 +259,7 @@ def rel_form(request):
         usersUniqueLogins=[[user] for user in usersUniqueLogins]
 
         print("users unique logins done")
+
 
         
         userlogins=set(userlogins)
