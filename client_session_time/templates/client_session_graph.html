@@ -42,9 +42,10 @@
     <!-- <h1>Time spent on {{date}} by {{client}} : {{data}}</h1> -->
     <script>
         var graphData = JSON.parse('{{ data|escapejs }}');
+        console.log(graphData)
         console.log(Object.keys(graphData))
-        var xData=Object.keys(graphData)
-        var yData=Object.values(graphData)
+        var xData = Object.keys(graphData)
+        var yData = Object.values(graphData)
         var data = [{
             x: xData,
             y: yData,
@@ -60,8 +61,17 @@
                 title: 'Session Time'
             }
         };
+        const config = {
+            displaylogo: false,
+            responsive: true,
+            scrollZoom: true
+        };
 
-        Plotly.newPlot('graph', data, layout);
+
+
+
+        Plotly.newPlot('graph', data, layout, config)
+        
     </script>
 
 </body>

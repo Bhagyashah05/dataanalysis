@@ -6,17 +6,106 @@
 <head>
     <title>Active Users</title>
     <style>
-       
+
     </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
 </head>
 
 <body>
-   
     {% include "changeclient.html" %}
 
+
+    <br><br>
+    <h2>Client : {{request.session.client}} </h2>
+    
+    <h2> Date : {{request.session.date}} To {{request.session.edate}} </h2>
     <br>
-    <br>
-    <h1>Active users of {{request.session.client}} is {{rel}}</h1>
+    <h3>Total users : {{tuser}}</h3>
+    <h3>Total phases : {{totalPhases}}</h3>
+
+    <h3>New Users created : {{usersCreatedCount}}</h3>
+    <h3>Active users : {{rel}} </h3>
+    <h3>Total Logins: {{totallogins}}</h3>
+    <h3>Unique Logins: {{uniquelogins}}</h3>
+    <h3>Videos Created: {{videosCreatedCount}}</h3>
+    {% for key, value in testCount.items %}
+        <h3>{{ key }} count: {{ value }}</h3>
+    {% endfor %}
+
+
+    <div id="pieChartContainer" style="width: 600px; height: 400px;"></div>
+
+    <div >
+        <table id="mytable4" ></table>
+
+        <table id="mytable" ></table>
+        <table id="mytable2" ></table>
+        <table id="mytable3" ></table>
+
+
+    </div>
+    <script>
+        var data = JSON.parse('{{ userlist|escapejs }}');
+        console.log(data)
+        $('#mytable').DataTable({
+            data: data,
+            columns: [
+                { title: 'Active Users' }
+            ]
+        });
+
+        var usersUniqueLogin = JSON.parse('{{usersUniqueLogin|escapejs}}')
+        $('#mytable2').DataTable({
+            data: usersUniqueLogin,
+            columns: [
+                { title: 'Unique Users Logins' }
+            ]
+        });
+
+        var videolist = JSON.parse('{{videolist|escapejs}}')
+        $('#mytable3').DataTable({
+            data: videolist,
+            columns: [
+                { title: 'New Videos Created' }
+            ]
+        });
+        var pieData = JSON.parse(`{{ phaseUserCount | escapejs }}`);
+        var phase_user_count_tableformat=JSON.parse('{{phase_user_count_tableformat|escapejs}}')
+        
+        $('#mytable4').DataTable({
+        order: [[1, "desc"]],
+        data: phase_user_count_tableformat,
+        columns: [
+          { title: 'Phase' },
+          { title: 'Active Users' }
+        ]
+      });
+       
+
+        Highcharts.chart('pieChartContainer', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Phase wise Active Users'
+            },
+            series: [{
+                name: 'Count',
+                data: pieData
+            }]
+        });
+    
+
+
+
+
+    </script>
+
+
 
 
 </body>

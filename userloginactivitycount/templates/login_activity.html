@@ -3,132 +3,104 @@
 
 <head>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      padding: 20px;
-    }
 
-    form {
-      background-color: #fff;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    input[type="email"],
-    select,
-    input[type="date"],
-    input[type="submit"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    input[type="submit"] {
-      background-color: #4caf50;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    h1 {
-      margin-top: 30px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    p {
-      margin: 10px 0;
-    }
-
-    img {
-      display: block;
-      margin-top: 20px;
-      max-width: 100%;
-      height: auto;
-    }
-
-    nav {
-      background-color: #f0f0f0;
-      padding: 10px;
-    }
-
-    nav a {
-      padding: 10px 20px;
-      margin: 0 5px;
-      background-color: aquamarine;
-      text-decoration: none;
-      border-radius: 10px;
-      font-size: 16px;
-      color: #333;
-    }
-
-    nav a:hover {
-      background-color: #ccc;
-    }
   </style>
-
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
 </head>
 
 <body>
-  <nav>
-    <a href="{% url 'activeuser' %}">Active Users</a>
-    <a href="{% url 'login_activity' %}">Login Activity of User</a>
-    <a href="{% url 'session_time' %}">Session Time of User</a>
-    <a href="{% url 'client_usage_graph' %}">Login Activity of Client</a>
-    <a href="{% url 'client_session' %}">Session Time of Client</a>
+  {% include "changeclient.html" %}
 
-  </nav>
-  <br>
-  <br>
-  {% if email %}
-  <form method="POST">
-    {% csrf_token %}
-    <label for="email">Email:</label>
-    <input type="email" name="email" required><br><br>
-    <label for="api_name">API Name:</label>
-    <select name="api_name" required>
-      <option value="users /signin">Sign In</option>
-      <option value="users/signup">Sign Up</option>
-      <!-- Add more options as needed -->
-    </select><br><br>
-    <label for="start_date">Start Date:</label>
-    <input type="date" name="start_date" required><br><br>
-    <input type="submit" value="Generate Graph">
+<div style="float: left;">
+  <div style="width: 60%;" style="float: left;">
+    <table id="datatable" class="display">
+      <thead>
+        <tr>
+          <th>Emails</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div id="graph" style="float: left;"></div>
+</div>
+  <script>
 
-    <h1>Login Activity</h1>
-    <p>Email: {{ email }}</p>
-    <p>API Name: {{ api_name }}</p>
-    <p>Start Date: {{ start_date }}</p>
-    <img src="data:image/png;base64,{{ graph_image }}" alt="Login Activity Graph">
-  </form>
-  {% else %}
-  <form method="POST">
-    {% csrf_token %}
-    <label for="email">Email:</label>
-    <input type="email" name="email" required><br><br>
-    <label for="api_name">API Name:</label>
-    <select name="api_name" required>
-      <option value="users /signin">Sign In</option>
-      <option value="users/signup">Sign Up</option>
-      <!-- Add more options as needed -->
-    </select><br><br>
-    <label for="start_date">Start Date:</label>
-    <input type="date" name="start_date" required><br><br>
-    <input type="submit" value="Get login Activity">
+    var data = JSON.parse('{{ data|escapejs }}');
+
+    console.log(data)
+    $(document).ready(function () {
 
 
-  </form>
-  {%endif%}
+      $('#datatable').DataTable({
+        order: [[1, "desc"]],
+        data: data,
+        columns: [
+          { title: 'User' },
+          { title: 'Count' }
+        ]
+      });
+
+      $('tr').click(function () {
+        $(this).find('td:first').each(function () {
+          console.log($(this).text())
+
+          var x = $(this).text()
+          // if (currentChart) {
+          //   // Remove the previous chart
+          //   currentChart.destroy();
+          // }
+          $.ajax({
+            url: '/login-activity/user',
+            method: 'GET',
+            data: {
+              x: x
+            },
+            success: function (response) {
+              var data = response
+              console.log(data)
+
+              var dates = Object.keys(data);
+              var counts = Object.values(data);
+
+              // Create the Highcharts graph
+              Highcharts.chart('graph', {
+                chart: {
+                  type: 'column'
+                },
+                title: {
+                  text: 'Graph Title'
+                },
+                xAxis: {
+                  categories: dates,
+                  title: {
+                    text: 'Dates'
+                  }
+                },
+                yAxis: {
+                  title: {
+                    text: 'Count'
+                  }
+                },
+                series: [{
+                  name: 'Counts',
+                  data: counts
+                }]
+              });
+
+
+            }
+          }
+
+
+          )
+        });
+      })
+    })
+  </script>
 
 </body>
 
